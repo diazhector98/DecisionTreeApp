@@ -18,6 +18,7 @@
 @property (strong, nonatomic) UILabel *rightLabel;
 @property (strong, nonatomic) UILabel *infoLabel;
 @property (strong, nonatomic) UIButton *selectButton;
+@property (strong, nonatomic) UIButton *backButton;
 
 @property (nonatomic) BOOL leftSelected;
 @property (nonatomic) BOOL rightSelected;
@@ -43,6 +44,7 @@
     self.rightLabel = [[UILabel alloc] init];
     self.infoLabel = [[UILabel alloc] init];
     self.selectButton = [[UIButton alloc] init];
+    self.backButton = [[UIButton alloc] init];
 }
 
 - (void) setUIProperties {
@@ -62,6 +64,9 @@
     self.infoLabel.alpha = 0;
     
     [self.selectButton setImage:[UIImage imageNamed:@"select"] forState:UIControlStateNormal];
+    [self.selectButton addTarget:self action:@selector(selectButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.backButton setImage:[UIImage imageNamed:@"backOrange"] forState:UIControlStateNormal];
     
     [self.leftView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.rightView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -71,6 +76,7 @@
     [self.rightLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.infoLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.selectButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.backButton setTranslatesAutoresizingMaskIntoConstraints:NO];
 }
 - (void)setUIConstraints {
     
@@ -82,6 +88,7 @@
     [self.rightView addSubview:self.rightLabel];
     [self.view addSubview:self.infoLabel];
     [self.view addSubview:self.selectButton];
+    [self.view addSubview:self.backButton];
     
     NSLayoutConstraint *leftLeftAnchor = [NSLayoutConstraint constraintWithItem:self.leftView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
     NSLayoutConstraint *leftWidthAnchor = [NSLayoutConstraint constraintWithItem:self.leftView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:0.5 constant:0];
@@ -123,9 +130,13 @@
     NSLayoutConstraint *selectButtonWidthAnchor = [NSLayoutConstraint constraintWithItem:self.selectButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:0.5 constant:0];
     NSLayoutConstraint *selectButtonHeightAnchor = [NSLayoutConstraint constraintWithItem:self.selectButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:0 constant:50];
     
-    [self.view addConstraints:@[leftLeftAnchor, leftTopAnchor, leftWidthAnchor, leftHeightAnchor, rightRightAnchor, rightTopAnchor, rightWidthAnchor, rightHeightAnchor, infoLabelTopAnchor, infoLabelWidthAnchor, infoLabelHeightAnchor, infoLabelCenterXAnchor, selectButtonTopAnchor, selectButtonCenterXAnchor, selectButtonWidthAnchor, selectButtonHeightAnchor]];
-    [self.leftView addConstraints:@[leftImageWidthAnchor, leftImageHeightAnchor, leftImageCenterXAnchor, leftImageCenterYAnchor, leftLabelTopAnchor, leftLabelWidthAnchor, leftLabelHeightAnchor, leftLabelCenterXAnchor]];
+    NSLayoutConstraint *backButtonTopAnchor = [NSLayoutConstraint constraintWithItem:self.backButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:50];
+    NSLayoutConstraint *backButtonLeftAnchor = [NSLayoutConstraint constraintWithItem:self.backButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    NSLayoutConstraint *backButtonWidthAnchor = [NSLayoutConstraint constraintWithItem:self.backButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:0 constant:100];
+    NSLayoutConstraint *backButtonHeightAnchor = [NSLayoutConstraint constraintWithItem:self.backButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:0 constant:50];
     
+    [self.view addConstraints:@[leftLeftAnchor, leftTopAnchor, leftWidthAnchor, leftHeightAnchor, rightRightAnchor, rightTopAnchor, rightWidthAnchor, rightHeightAnchor, infoLabelTopAnchor, infoLabelWidthAnchor, infoLabelHeightAnchor, infoLabelCenterXAnchor, selectButtonTopAnchor, selectButtonCenterXAnchor, selectButtonWidthAnchor, selectButtonHeightAnchor, backButtonLeftAnchor, backButtonTopAnchor, backButtonWidthAnchor, backButtonHeightAnchor]];
+    [self.leftView addConstraints:@[leftImageWidthAnchor, leftImageHeightAnchor, leftImageCenterXAnchor, leftImageCenterYAnchor, leftLabelTopAnchor, leftLabelWidthAnchor, leftLabelHeightAnchor, leftLabelCenterXAnchor]];
     [self.rightView addConstraints:@[rightImageWidthAnchor, rightImageHeightAnchor,  rightImageCenterXAnchor, rightImageCenterYAnchor, rightLabelTopAnchor, rightLabelWidthAnchor, rightLabelHeightAnchor, rightLabelCenterXAnchor]];
     
     
@@ -251,6 +262,18 @@
         self.rightImageView.frame = newRightImageRect;
         self.rightLabel.frame = newRightLabelRect;
         self.infoLabel.alpha = 0;
+    } completion:nil];
+}
+
+- (void)selectButtonPressed{
+    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        if(self.leftSelected){
+            CGRect newImageRect = CGRectMake(25, 40, 100, 100);
+            self.leftImageView.frame = newImageRect;
+        } else {
+            CGRect newImageRect = CGRectMake(25-self.view.frame.size.width / 2, 40, 100, 100);
+            self.rightImageView.frame = newImageRect;
+        }
     } completion:nil];
     
 }
