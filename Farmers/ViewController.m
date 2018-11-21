@@ -19,6 +19,7 @@
 @property (strong, nonatomic) UILabel *infoLabel;
 @property (strong, nonatomic) UIButton *selectButton;
 @property (strong, nonatomic) UIButton *backButton;
+@property (strong, nonatomic) UIView *pesticidesBackgroundView;
 
 @property (nonatomic) BOOL leftSelected;
 @property (nonatomic) BOOL rightSelected;
@@ -28,11 +29,9 @@
 @property (nonatomic) CGRect leftLabelOriginalFrame;
 @property (nonatomic) CGRect rightImageOriginalFrame;
 @property (nonatomic) CGRect rightLabelOriginalFrame;
-
+@property (nonatomic) CGRect centralImageFrame;
 
 @end
-
-
 @implementation ViewController
 
 - (void) initializeUIElements {
@@ -45,6 +44,7 @@
     self.infoLabel = [[UILabel alloc] init];
     self.selectButton = [[UIButton alloc] init];
     self.backButton = [[UIButton alloc] init];
+    self.pesticidesBackgroundView = [[UIView alloc] init];
 }
 
 - (void) setUIProperties {
@@ -65,9 +65,11 @@
     
     [self.selectButton setImage:[UIImage imageNamed:@"select"] forState:UIControlStateNormal];
     [self.selectButton addTarget:self action:@selector(selectButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
     [self.backButton setImage:[UIImage imageNamed:@"backOrange"] forState:UIControlStateNormal];
+    [self.backButton addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
+    self.pesticidesBackgroundView.backgroundColor = [UIColor colorWithRed:0.36 green:0.78 blue:0.69 alpha:1.0];
+    [self.pesticidesBackgroundView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.leftView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.rightView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.leftImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -77,9 +79,9 @@
     [self.infoLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.selectButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.backButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.pesticidesBackgroundView setTranslatesAutoresizingMaskIntoConstraints:NO];
 }
 - (void)setUIConstraints {
-    
     [self.view addSubview:self.leftView];
     [self.view addSubview:self.rightView];
     [self.leftView addSubview:self.leftImageView];
@@ -89,6 +91,7 @@
     [self.view addSubview:self.infoLabel];
     [self.view addSubview:self.selectButton];
     [self.view addSubview:self.backButton];
+    [self.view addSubview:self.pesticidesBackgroundView];
     
     NSLayoutConstraint *leftLeftAnchor = [NSLayoutConstraint constraintWithItem:self.leftView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
     NSLayoutConstraint *leftWidthAnchor = [NSLayoutConstraint constraintWithItem:self.leftView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:0.5 constant:0];
@@ -135,25 +138,25 @@
     NSLayoutConstraint *backButtonWidthAnchor = [NSLayoutConstraint constraintWithItem:self.backButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:0 constant:100];
     NSLayoutConstraint *backButtonHeightAnchor = [NSLayoutConstraint constraintWithItem:self.backButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:0 constant:50];
     
-    [self.view addConstraints:@[leftLeftAnchor, leftTopAnchor, leftWidthAnchor, leftHeightAnchor, rightRightAnchor, rightTopAnchor, rightWidthAnchor, rightHeightAnchor, infoLabelTopAnchor, infoLabelWidthAnchor, infoLabelHeightAnchor, infoLabelCenterXAnchor, selectButtonTopAnchor, selectButtonCenterXAnchor, selectButtonWidthAnchor, selectButtonHeightAnchor, backButtonLeftAnchor, backButtonTopAnchor, backButtonWidthAnchor, backButtonHeightAnchor]];
+    NSLayoutConstraint *pesticidesBackgroundWidthAnchor = [NSLayoutConstraint constraintWithItem:self.pesticidesBackgroundView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:1 constant:0];
+    NSLayoutConstraint *pesticidesBackgroundHeightAnchor = [NSLayoutConstraint constraintWithItem:self.pesticidesBackgroundView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:0.80 constant:0];
+    NSLayoutConstraint *pesticidesBackgroundCenterXAnchor = [NSLayoutConstraint constraintWithItem:self.pesticidesBackgroundView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    NSLayoutConstraint *pesticidesBackgroundTopAnchor = [NSLayoutConstraint constraintWithItem:self.pesticidesBackgroundView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    
+    [self.view addConstraints:@[leftLeftAnchor, leftTopAnchor, leftWidthAnchor, leftHeightAnchor, rightRightAnchor, rightTopAnchor, rightWidthAnchor, rightHeightAnchor, infoLabelTopAnchor, infoLabelWidthAnchor, infoLabelHeightAnchor, infoLabelCenterXAnchor, selectButtonTopAnchor, selectButtonCenterXAnchor, selectButtonWidthAnchor, selectButtonHeightAnchor, backButtonLeftAnchor, backButtonTopAnchor, backButtonWidthAnchor, backButtonHeightAnchor, pesticidesBackgroundWidthAnchor, pesticidesBackgroundHeightAnchor, pesticidesBackgroundCenterXAnchor, pesticidesBackgroundTopAnchor]];
     [self.leftView addConstraints:@[leftImageWidthAnchor, leftImageHeightAnchor, leftImageCenterXAnchor, leftImageCenterYAnchor, leftLabelTopAnchor, leftLabelWidthAnchor, leftLabelHeightAnchor, leftLabelCenterXAnchor]];
     [self.rightView addConstraints:@[rightImageWidthAnchor, rightImageHeightAnchor,  rightImageCenterXAnchor, rightImageCenterYAnchor, rightLabelTopAnchor, rightLabelWidthAnchor, rightLabelHeightAnchor, rightLabelCenterXAnchor]];
-    
-    
 }
 - (void)addGestureRecognizers {
     UITapGestureRecognizer *leftRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectedLeft)];
     [self.leftView addGestureRecognizer:leftRecognizer];
     [self.leftView setUserInteractionEnabled:YES];
-    
     UITapGestureRecognizer *rightRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectedRight)];
     [self.rightView addGestureRecognizer:rightRecognizer];
     [self.rightView setUserInteractionEnabled:YES];
-    
 }
 - (void)selectedLeft {
     self.view.backgroundColor = [UIColor colorWithRed:0.99 green:0.87 blue:0.65 alpha:1.0];
-
     if (self.leftSelected){
         [self compressLeftView];
         self.leftSelected = false;
@@ -162,12 +165,12 @@
         self.leftSelected = true;
     }
 }
-
 - (void)expandLeftView {
     self.leftViewOriginalFrame = self.leftView.frame;
     self.rightViewOriginalFrame = self.rightView.frame;
     self.leftImageOriginalFrame = self.leftImageView.frame;
     self.leftLabelOriginalFrame = self.leftLabel.frame;
+    self.rightImageOriginalFrame = self.rightImageView.frame;
     [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseIn animations:^{
         CGRect newRightRect = self.rightView.frame;
         CGRect newLeftImageRect = self.leftImageView.frame;
@@ -179,15 +182,14 @@
         newLeftLabelRect.origin.y = newLeftImageRect.origin.y + newLeftImageRect.size.height;
         newLeftLabelRect.origin.x = self.view.frame.size.width / 2 - newLeftLabelRect.size.width / 2;
         newButtonRect.origin.y -= 150;
+        self.centralImageFrame = newLeftImageRect;
         self.selectButton.frame = newButtonRect;
         self.leftImageView.frame = newLeftImageRect;
         self.leftLabel.frame = newLeftLabelRect;
         self.rightView.frame = newRightRect;
         self.infoLabel.alpha = 1;
     } completion:nil];
-    
 }
-
 - (void)compressLeftView {
     [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseIn animations:^{
         CGRect newRightRect = self.rightView.frame;
@@ -207,7 +209,6 @@
         self.infoLabel.alpha = 0;
     } completion:nil];
 }
-
 - (void)selectedRight {
     self.view.backgroundColor = [UIColor colorWithRed:0.96 green:0.72 blue:0.53 alpha:1.0];
     if(self.rightSelected){
@@ -222,9 +223,6 @@
     self.rightImageOriginalFrame = self.rightImageView.frame;
     self.rightLabelOriginalFrame = self.rightLabel.frame;
     self.leftViewOriginalFrame = self.leftView.frame;
-    
-    NSLog(@"%f", self.view.frame.size.width / 2);
-    
     [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseIn animations:^{
         CGRect newLeftRect = self.leftView.frame;
         CGRect newRightImageRect = self.rightImageView.frame;
@@ -242,10 +240,8 @@
         self.rightImageView.frame = newRightImageRect;
         self.infoLabel.alpha = 1;
     } completion:nil];
-    
 }
 - (void)compressRight {
-    
     [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseIn animations:^{
         CGRect newLeftRect = self.leftView.frame;
         CGRect newRightImageRect = self.rightImageView.frame;
@@ -264,18 +260,30 @@
         self.infoLabel.alpha = 0;
     } completion:nil];
 }
-
 - (void)selectButtonPressed{
-    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
         if(self.leftSelected){
             CGRect newImageRect = CGRectMake(25, 40, 100, 100);
+            CGRect newBackButtonRect = CGRectMake(200, 50, 150, 75);
+            CGRect newPesticidesBackgroundRect = self.pesticidesBackgroundView.frame;
+            newPesticidesBackgroundRect.origin.y = 200;
             self.leftImageView.frame = newImageRect;
+            self.backButton.frame = newBackButtonRect;
+            self.pesticidesBackgroundView.frame = newPesticidesBackgroundRect;
         } else {
             CGRect newImageRect = CGRectMake(25-self.view.frame.size.width / 2, 40, 100, 100);
             self.rightImageView.frame = newImageRect;
         }
     } completion:nil];
-    
+}
+- (void)backButtonPressed {
+    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        CGRect newBackgroundRect = self.pesticidesBackgroundView.frame;
+        newBackgroundRect.origin.y = self.view.frame.size.height;
+        self.pesticidesBackgroundView.frame = newBackgroundRect;
+        self.rightImageView.frame = self.rightImageOriginalFrame;
+        self.leftImageView.frame = self.leftImageOriginalFrame;
+    } completion:nil];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -287,12 +295,8 @@
     [self setUIConstraints];
     [self addGestureRecognizers];
 }
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
 @end
