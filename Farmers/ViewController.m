@@ -30,6 +30,7 @@
 @property (nonatomic) CGRect rightImageOriginalFrame;
 @property (nonatomic) CGRect rightLabelOriginalFrame;
 @property (nonatomic) CGRect centralImageFrame;
+@property (nonatomic) CGRect backButtonOriginalFrame;
 
 @end
 @implementation ViewController
@@ -261,6 +262,7 @@
     } completion:nil];
 }
 - (void)selectButtonPressed{
+    self.backButtonOriginalFrame = self.backButton.frame;
     [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
         if(self.leftSelected){
             CGRect newImageRect = CGRectMake(25, 40, 100, 100);
@@ -277,12 +279,21 @@
     } completion:nil];
 }
 - (void)backButtonPressed {
+    self.leftSelected = false;
+    self.rightSelected = false;
     [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
         CGRect newBackgroundRect = self.pesticidesBackgroundView.frame;
         newBackgroundRect.origin.y = self.view.frame.size.height;
+        CGRect selectButtonRect = self.selectButton.frame;
+        selectButtonRect.origin.y += 150;
         self.pesticidesBackgroundView.frame = newBackgroundRect;
         self.rightImageView.frame = self.rightImageOriginalFrame;
         self.leftImageView.frame = self.leftImageOriginalFrame;
+        self.rightView.frame = self.rightViewOriginalFrame;
+        self.leftLabel.frame = self.leftLabelOriginalFrame;
+        self.selectButton.frame = selectButtonRect;
+        self.backButton.frame = self.backButtonOriginalFrame;
+        self.infoLabel.alpha = 0;
     } completion:nil];
 }
 - (void)viewDidLoad {
